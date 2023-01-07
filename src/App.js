@@ -1,23 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+
+// Pages
+import Login from './login'
+import ProductList from './productList'
+import ProductDetail from './productDetail'
+
+// Router
+import { Route, Routes } from "react-router-dom"
+
 
 function App() {
+
+  const navigate = useNavigate()
+
+  let { isLoggedIn } = useSelector((state => state.LoginSlice))
+
+  useEffect(() => {
+    // window.location.href = `${window.location.href}/product`
+    if (isLoggedIn)
+      navigate("/productList")
+  }, [isLoggedIn])
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/productList">
+          <Route index element={<ProductList />} />
+          <Route path=":id" element={<ProductDetail />} />
+        </Route>
+      </Routes>
+
+      {/* {
+        !isLoggedIn ? <Login></Login> : <>Product list</>
+      } */}
+
     </div>
   );
 }
